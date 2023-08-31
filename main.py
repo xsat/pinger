@@ -1,6 +1,6 @@
 from configparser import ConfigParser
 from platform import system
-from subprocess import check_output
+from subprocess import check_output, CalledProcessError
 from re import search, Match
 from hashlib import md5
 from PySimpleGUI import theme, rgb, theme_element_background_color, Window, Text, StatusBar, Button, WIN_CLOSED
@@ -62,7 +62,6 @@ def main() -> None:
 
     while True:
         event, values = window.read()
-        print(event)
 
         if event == WIN_CLOSED or event == CLOSE_BUTTON_KEY:
             break
@@ -99,16 +98,22 @@ def ping(hostname: str) -> bool:
 
         return search_result is not None
 
-    if system() == WINDOWS_OS:
-        param = WINDOWS_PING_PARAM
-    else:
-        param = OTHER_PING_PARAM
+    def get_ping_param() -> str:
+        if system() == WINDOWS_OS:
+            return WINDOWS_PING_PARAM
 
+        return OTHER_PING_PARAM
+
+    param: str = get_ping_param()
     command: list[str] = ['ping', param, '1', hostname]
-    command_result: str = str(check_output(command))
 
-    return (not is_matched(HOST_UNREACHABLE_PING_PATTERN, command_result)
-            and not is_matched(LOST_PACKAGE_PING_PATTERN, command_result))
+    try:
+        command_result: str = str(check_output(command))
+
+        return (not is_matched(HOST_UNREACHABLE_PING_PATTERN, command_result)
+                and not is_matched(LOST_PACKAGE_PING_PATTERN, command_result))
+    except CalledProcessError:
+        return False
 
 
 if __name__ == '__main__':
