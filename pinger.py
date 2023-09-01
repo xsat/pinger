@@ -7,8 +7,8 @@ from time import strftime
 
 DEFAULT_THEME: str = 'Dark'
 
-SETTINGS_FILENAME: str = 'settings.ini'
-TRANSLATION_FILENAME: str = 'translation.ini'
+SETTINGS_FILENAME: str = 'data/settings.ini'
+TRANSLATION_FILENAME: str = 'data/translation.ini'
 
 DEFAULT_LANGUAGE: str = 'DEFAULT'
 
@@ -27,7 +27,7 @@ DEFAULT_LAST_CHECK_TEXT: str = '0000-00-00 00:00:00'
 DEFAULT_TIME_FORMAT: str = '%Y-%m-%d %H:%M:%S'
 
 
-def main() -> None:
+def pinger() -> None:
     def generate_key(left_name: str, right_name: str) -> str:
         return md5(f'{left_name}-{right_name}'.encode()).hexdigest()
 
@@ -83,7 +83,6 @@ def main() -> None:
             window.refresh()
 
             for element_key in element_keys:
-                print(window[element_key].metadata)
                 address: str = window[element_key].metadata
                 is_ping_success: bool = ping(address)
                 new_background_color: str = get_background_color(is_ping_success)
@@ -94,4 +93,4 @@ def main() -> None:
 
 
 if __name__ == '__main__':
-    main()
+    pinger()

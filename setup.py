@@ -1,20 +1,14 @@
 from cx_Freeze import setup, Executable
 
-base = None
-
-executables = [Executable('main.py', base=base)]
-
-packages = ['configparser', 'hashlib', 'PySimpleGUI', 'platform', 'subprocess', 're', 'ping', 'time', 'idna']
-options = {
-    'build_exe': {
-        'packages': packages,
-    },
-}
-
 setup(
     name='Pinger',
-    options=options,
+    options={
+        'build_exe': {
+            'packages': ['configparser', 'hashlib', 'PySimpleGUI', 'platform', 'subprocess', 're', 'ping', 'time'],
+            'include_files': [('settings.ini', 'data/settings.ini'), ('translation.ini', 'data/translation.ini')],
+        },
+    },
     version='1.0.0',
     description='This is simple software what **ping** all provided ip addresses or hostnames.',
-    executables=executables
+    executables=[Executable('pinger.py')]
 )
