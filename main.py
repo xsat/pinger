@@ -4,18 +4,27 @@ from PySimpleGUI import theme, rgb, theme_element_background_color, Window, Text
 from ping import ping
 from time import strftime
 
+
 DEFAULT_THEME: str = 'Dark'
 
 SETTINGS_FILENAME: str = 'settings.ini'
+TRANSLATION_FILENAME: str = 'translation.ini'
+
+DEFAULT_LANGUAGE: str = 'DEFAULT'
 
 BLACK_COLOR: str = rgb(0, 0, 0)
-RED_COLOR: str = rgb(255, 0, 0)
-GREEN_COLOR: str = rgb(0, 255, 0)
-BLUE_COLOR: str = rgb(0, 255, 255)
+RED_COLOR: str = rgb(200, 0, 0)
+GREEN_COLOR: str = rgb(0, 200, 0)
+BLUE_COLOR: str = rgb(0, 87, 183)
+YELLOW_COLOR: str = rgb(255, 215, 0)
 
-TEST_BUTTON_KEY: str = 'dd8fe8f21b59e4d70f144900fbf286a2'
-CLOSE_BUTTON_KEY: str = 'e48f38b2f4d895fe81e9604877fee9d9'
-LAST_CHECK_TEXT_KEY: str = 'ce2082b1ba08ac910de71e10a8643a78'
+TEST_BUTTON_KEY: str = 'TEST_BUTTON'
+CLOSE_BUTTON_KEY: str = 'CLOSE_BUTTON'
+LAST_CHECK_TEXT_KEY: str = 'LAST_CHECK_TEXT'
+WINDOW_TITLE_KEY: str = 'WINDOW_TITLE'
+
+DEFAULT_LAST_CHECK_TEXT: str = '0000-00-00 00:00:00'
+DEFAULT_TIME_FORMAT: str = '%Y-%m-%d %H:%M:%S'
 
 
 def main() -> None:
@@ -29,9 +38,7 @@ def main() -> None:
         return RED_COLOR
 
     def get_last_check_text() -> str:
-        return strftime('%Y-%m-%d %H:%M:%S')
-
-        # return '0000-00-00 00:00:01'
+        return strftime(DEFAULT_TIME_FORMAT)
 
     theme(DEFAULT_THEME)
 
@@ -47,14 +54,18 @@ def main() -> None:
         for value_name in config[section_name]:
             element_key = generate_key(section_name, value_name)
             element_keys.append(element_key)
-            layout.append([StatusBar(value_name, key=element_key)])
+            layout.append([StatusBar(value_name, key=element_key, metadata=config[section_name][value_name])])
+
+    config.read(TRANSLATION_FILENAME)
+
+    selected_language: str = DEFAULT_LANGUAGE
 
     layout.append([
-        Button('Test', key=TEST_BUTTON_KEY, button_color=BLUE_COLOR),
-        Button('Close', key=CLOSE_BUTTON_KEY, button_color=RED_COLOR),
-        Text('0000-00-00 00:00:00', key=LAST_CHECK_TEXT_KEY)])
+        Button(config[selected_language][TEST_BUTTON_KEY], key=TEST_BUTTON_KEY, button_color=BLUE_COLOR),
+        Button(config[selected_language][CLOSE_BUTTON_KEY], key=CLOSE_BUTTON_KEY, button_color=YELLOW_COLOR),
+        Text(DEFAULT_LAST_CHECK_TEXT, key=LAST_CHECK_TEXT_KEY)])
 
-    window: Window = Window('Pinger', layout, resizable=True)
+    window: Window = Window(config[selected_language][WINDOW_TITLE_KEY], layout, resizable=True)
     default_element_background_color: str = theme_element_background_color()
 
     while True:
@@ -64,21 +75,20 @@ def main() -> None:
             break
 
         if event == TEST_BUTTON_KEY:
-            for element_key1 in element_keys:
-                window[element_key1].update(background_color=default_element_background_color)
+            for element_key in element_keys:
+                window[element_key].update(background_color=default_element_background_color)
 
             last_check_text: str = get_last_check_text()
             window[LAST_CHECK_TEXT_KEY].update(value=last_check_text)
             window.refresh()
 
-            for section_name in config.sections():
-                for value_name in config[section_name]:
-                    address: str = config[section_name][value_name]
-                    is_ping_success: bool = ping(address)
-                    new_background_color: str = get_background_color(is_ping_success)
-                    element_key: str = generate_key(section_name, value_name)
-                    window[element_key].update(background_color=new_background_color)
-                    window.refresh()
+            for element_key in element_keys:
+                print(window[element_key].metadata)
+                address: str = window[element_key].metadata
+                is_ping_success: bool = ping(address)
+                new_background_color: str = get_background_color(is_ping_success)
+                window[element_key].update(background_color=new_background_color)
+                window.refresh()
 
     window.close()
 
