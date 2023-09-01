@@ -26,6 +26,14 @@ Explanation for first group in `settings.ini`
 - `test localhost` item title  is **required**
 - `localhost` ip or hostname is **required**
 
+## Build
+
+You can build program using console command:
+
+```shell
+python setup.py build
+```
+
 ### Example of just started program
 ![Just started program](/screenshots/just_started_program.jpg)
 
