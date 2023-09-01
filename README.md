@@ -30,7 +30,7 @@ Explanation for first group in `settings.ini`
 
 You can build program using console command:
 
-```shell
+```sh
 python setup.py build
 ```
 
