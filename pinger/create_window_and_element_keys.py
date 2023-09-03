@@ -8,6 +8,8 @@ from pinger.colors import BLUE_COLOR, YELLOW_COLOR
 DATA_FILENAME: str = path.abspath('data/data.ini')
 TRANSLATION_FILENAME: str = path.abspath('data/translation.ini')
 
+ICON_FILENAME = path.abspath('data/icon.ico')
+
 DEFAULT_LANGUAGE: str = 'DEFAULT'
 
 TEST_BUTTON_KEY: str = 'TEST_BUTTON'
@@ -45,6 +47,6 @@ def create_window_and_element_keys() -> tuple[Window, list[str]]:
         Button(config[selected_language][CLOSE_BUTTON_KEY], key=CLOSE_BUTTON_KEY, button_color=YELLOW_COLOR),
         Text(DEFAULT_LAST_CHECK_TEXT, key=LAST_CHECK_TEXT_KEY)])
 
-    window: Window = Window(config[selected_language][WINDOW_TITLE_KEY], layout, resizable=True)
+    window: Window = Window(config[selected_language][WINDOW_TITLE_KEY], layout, icon=ICON_FILENAME, resizable=True)
 
     return window, element_keys
