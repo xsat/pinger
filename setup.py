@@ -1,14 +1,18 @@
 from cx_Freeze import setup, Executable
+from sys import path
 
 setup(
     name='Pinger',
     options={
         'build_exe': {
-            'packages': ['configparser', 'hashlib', 'PySimpleGUI', 'platform', 'subprocess', 're', 'ping', 'time'],
-            'include_files': [('settings.ini', 'data/settings.ini'), ('translation.ini', 'data/translation.ini')],
+            'path': path + ['pinger'],
+            'packages': ['colors', 'ping', 'create_window_and_element_keys',
+                         'ping_elements', 'restore_elements', 'PySimpleGUI'],
+            'include_files': [('pinger/data/settings.ini', 'data/settings.ini'),
+                              ('pinger/data/translation.ini', 'data/translation.ini')],
         },
     },
     version='1.0.0',
     description='This is simple software what **ping** all provided ip addresses or hostnames.',
-    executables=[Executable('pinger.py')]
+    executables=[Executable('pinger/__main__.py', target_name='pinger')]
 )
