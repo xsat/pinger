@@ -8,7 +8,7 @@ setup(
             'path': path + ['pinger'],
             'packages': ['colors', 'ping', 'create_window_and_element_keys',
                          'ping_elements', 'restore_elements', 'PySimpleGUI'],
-            'include_files': [('pinger/data/settings.ini', 'data/settings.ini'),
+            'include_files': [('pinger/data/data.ini', 'data/data.ini'),
                               ('pinger/data/translation.ini', 'data/translation.ini')],
         },
     },

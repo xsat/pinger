@@ -4,7 +4,7 @@ This is simple software what **ping** all provided ip addresses or hostnames.
 
 ## Setup
 
-You modify `data/settings.ini` file for your needs, example:
+You modify `data/data.ini` file for your needs, example:
 
 ```ini
 [localhost test]
@@ -20,7 +20,7 @@ test 8.8.8.8 = 8.8.8.8
 test 8.8.4.4 = 8.8.4.4
 ```
 
-Explanation for first group in `data/settings.ini`
+Explanation for first group in `data/data.ini`
 
 - `[localhost test]` group title is **required**
 - `test localhost` item title  is **required**

@@ -5,7 +5,7 @@ from PySimpleGUI import Text, StatusBar, Button, Element, Window
 from pinger.restore_elements import LAST_CHECK_TEXT_KEY
 from pinger.colors import BLUE_COLOR, YELLOW_COLOR
 
-SETTINGS_FILENAME: str = path.abspath('data/settings.ini')
+DATA_FILENAME: str = path.abspath('data/data.ini')
 TRANSLATION_FILENAME: str = path.abspath('data/translation.ini')
 
 DEFAULT_LANGUAGE: str = 'DEFAULT'
@@ -25,7 +25,7 @@ def create_window_and_element_keys() -> tuple[Window, list[str]]:
     element_keys: list[str] = []
 
     config: ConfigParser = ConfigParser()
-    config.read(SETTINGS_FILENAME)
+    config.read(DATA_FILENAME)
 
     for section_name in config.sections():
         layout.append([Text(section_name)])
